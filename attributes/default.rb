@@ -28,21 +28,21 @@
 default['cf_ha_chef']['aws_secret_access_key'] = ''
 default['cf_ha_chef']['aws_access_key_id'] = ''
 
-# SASL S3 Bucket
-default['cf_ha_chef']['sasl_location'] = ''
+# Pass to pull a backup and use knife ec to restore
+default['cf_ha_chef']['backup_restore'] = ''
+
+# S3 Bucket created by Cloudformation e.g.; /bucket-name/bucket
+default['cf_ha_chef']['s3']['backup_bucket'] = ''
 
 # Manage Attributes
-default['cf_ha_chef']['manage']['signupdisable'] = 'false'
-default['cf_ha_chef']['manage']['cheflog_level'] = 'info'
-default['cf_ha_chef']['manage']['managelog_level'] = 'info'
-default['cf_ha_chef']['manage']['publicport'] = '443'
-default['cf_ha_chef']['manage']['supportemail'] = 'chefsupport@domain.com'
+default['cf_ha_chef']['manage']['signupdisable'] = ''
+default['cf_ha_chef']['manage']['supportemail'] = ''
 
 # Mail Relay host
-default['cf_ha_chef']['mail']['relayhost'] = 'smtp.domain.com'
-default['cf_ha_chef']['mail']['relayport'] = '25'
+default['cf_ha_chef']['mail']['relayhost'] = ''
+default['cf_ha_chef']['mail']['relayport'] = ''
 
-# License Count Info, still unsure if this works
+# License Count Info
 default['cf_ha_chef']['licensecount'] = '25'
 
 # FQDN of your Amazon Elastic Load Balancer or Route53 CNAME to load balancer DNS
@@ -52,17 +52,17 @@ default['cf_ha_chef']['api_fqdn'] = ''
 default['cf_ha_chef']['ebs_volume_id'] = ''
 default['cf_ha_chef']['ebs_device'] = ''
 
-# Set domain up
-default['cf_ha_chef']['domain'] = 'chef.domain.com'
+# Domain provided via Route53 hosted zone
+default['cf_ha_chef']['domain'] = ''
 
 # Analytic Server Config needed by all servers
-default['cf_ha_chef']['analytics']['url'] = 'analytics.domain.com'
+default['cf_ha_chef']['analytics']['url'] = ''
 
 # Only needs to be known to the analytics server itself
 default['cf_ha_chef']['analytics']['fqdn'] = ''
 default['cf_ha_chef']['analytics']['ip_address'] = ''
 
-# Backend servers.  Must be in same availability zone, for example: us-west-1b, needs to be known by all servers excluding analytics
+# Backend Attributes
 default['cf_ha_chef']['backendprimary']['fqdn']        = ''
 default['cf_ha_chef']['backendprimary']['ip_address']  = ''
 default['cf_ha_chef']['backendfailover']['fqdn']       = ''
@@ -72,11 +72,17 @@ default['cf_ha_chef']['backendfailover']['ip_address'] = ''
 default['cf_ha_chef']['backend_vip']['fqdn']       = ''
 default['cf_ha_chef']['backend_vip']['ip_address'] = ''
 
-# Put your frontends in different availability zones if you wish
-# Only FE01 needs to know about FE01, frontends don't need to know about each other and the backend doesn't need to know about the frontends.
-# The 172.33.2.0/24 subnet is in us-west-1b
+# Frontend Attributes
 default['cf_ha_chef']['frontends']['fe1']['fqdn']          = ''
 default['cf_ha_chef']['frontends']['fe1']['ip_address']    = ''
-# The 172.33.2.0/24 subnet is in us-west-1b
+
+# Frontend Attributes
 default['cf_ha_chef']['frontends']['fe2']['fqdn']          = ''
 default['cf_ha_chef']['frontends']['fe2']['ip_address']    = ''
+
+# New Relic Configurations
+default['cf_ha_chef']['newrelic']['plugins'] = []
+
+# Citadel
+default['citadel']['bucket'] = ''
+default['sumologic']['userID'] = ''

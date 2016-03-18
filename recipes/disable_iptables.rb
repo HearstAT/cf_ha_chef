@@ -25,5 +25,5 @@
 #
 
 service 'iptables' do
-  action [ :stop, :disable ]
+  action [:stop, :disable]
 end

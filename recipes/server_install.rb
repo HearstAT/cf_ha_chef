@@ -25,42 +25,29 @@
 #
 
 # Run this recipe on every server *but* the primary to configure everything
-
 include_recipe 'cf_ha_chef::push_jobs'
 include_recipe 'cf_ha_chef::reporting'
 
-# Sync the Chef server files from the primary backend
-remote_file "#{Chef::Config[:file_cache_path]}/core_bundle.tar.gz" do
-  action :create
-  source "http://#{node['cf_ha_chef']['backendprimary']['fqdn']}:31337/core_bundle.tar.gz"
-  owner "root"
-  group "root"
-  mode "0644"
-  retries 15
-  retry_delay 120
+execute 's3-core-bundle' do
+  command "aws s3 cp s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/core_bundle.tar.gz #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz"
+  action :run
 end
 
-# Sync the reporting files from the primary backend
-remote_file "#{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz" do
-  action :create
-  source "http://#{node['cf_ha_chef']['backendprimary']['fqdn']}:31337/reporting_bundle.tar.gz"
-  owner "root"
-  group "root"
-  mode "0644"
-  retries 15
-  retry_delay 120
+execute 's3-reporting-bundle' do
+  command "aws s3 cp s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/reporting_bundle.tar.gz #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz"
+  action :run
 end
 
 # Unpack the server files
-execute "cd /; tar -zxvf #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz" do
+execute "tar -zxvf #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz" do
   action :run
-  cwd "/"
+  cwd '/'
 end
 
 # Unpack the reporting files
-execute "cd /; tar -zxvf #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz" do
+execute "tar -zxvf #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz" do
   action :run
-  cwd "/"
+  cwd '/'
 end
 
 # Configure all the things

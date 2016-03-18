@@ -27,6 +27,6 @@
 include_recipe 'cf_ha_chef::hosts'
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::manage'
-include_recipe "cf_ha_chef::configfile"
+include_recipe 'cf_ha_chef::configfile'
 include_recipe 'cf_ha_chef::mail'
 include_recipe 'cf_ha_chef::certs'

@@ -26,26 +26,26 @@
 # This recipe configures the postfix
 #
 
-%w{postfix sasl2-bin}.each do |pkg|
+%w(postfix sasl2-bin).each do |pkg|
   package pkg do
     action :install
   end
 end
 
 service 'postfix' do
-  action [ :enable, :start ]
+  action [:enable, :start]
 end
 
-template "/etc/postfix/main.cf" do
-  source    "main.cf.erb"
-  notifies  :restart,"service[postfix]"
+template '/etc/postfix/main.cf' do
+  source 'main.cf.erb'
+  notifies :restart, 'service[postfix]'
 end
 
 execute 'get_saslpasswd' do
   command "aws s3 cp s3://#{node['cf_ha_chef']['sasl_location']} /etc/postfix/sasl_passwd"
   action :run
-  notifies  :restart,"service[postfix]"
-  notifies  :run,"execute[postmapcreds]",:immediately
+  notifies :restart, 'service[postfix]'
+  notifies :run, 'execute[postmapcreds]', immediately
 end
 
 execute 'postmapcreds' do

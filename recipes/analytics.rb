@@ -25,12 +25,22 @@
 #
 # This recipe installs the analytics server.
 
-include_recipe 'cf_ha_chef::hosts'
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::mail'
+include_recipe 'cf_ha_chef::certs'
+include_recipe 'cf_ha_chef::server_install'
+include_recipe 'cf_ha_chef::newrelic'
+include_recipe 'cf_ha_chef::sumologic'
+
+template '/etc/hosts' do
+  action :create
+  source 'analytics_hosts.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
 
 # Create and place the analytics configuration file
-
 directory '/etc/opscode-analytics' do
   action :create
   owner 'root'
@@ -46,15 +56,6 @@ template '/etc/opscode-analytics/opscode-analytics.rb' do
   mode '0644'
 end
 
-# Ensure cert directory exists
-directory '/var/opt/opscode-analytics/ssl/ca/' do
-  owner 'root'
-  group 'root'
-  mode 00644
-  recursive true
-  action :create
-end
-
 directory '/var/opt/opscode-analytics/nginx/etc/nginx.d/' do
   owner 'root'
   group 'root'
@@ -63,8 +64,34 @@ directory '/var/opt/opscode-analytics/nginx/etc/nginx.d/' do
   action :create
 end
 
-# Put the wildcard cert into place for nginx
+template '/var/opt/opscode-analytics/nginx/etc/nginx.d/stage.conf' do
+  source 'stage-analytics.conf.erb'
+  owner 'root'
+  group 'root'
+  mode 00777
+end
 
+execute 's3-analytics-bundle' do
+  command "aws s3 cp s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/analytics_bundle.tar.gz #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz"
+  action :run
+end
+
+# Unpack the server files
+execute "tar -zxvf #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz" do
+  action :run
+  cwd '/'
+end
+
+template '/var/opt/opscode-analytics/nginx/etc/nginx.d/stage.conf' do
+  source 'stage-analytics.conf.erb'
+  owner 'root'
+  group 'root'
+  mode 00777
+end
+
+execute 'opscode-analytics-ctl reconfigure'
+
+# Put the wildcard cert into place for nginx
 cookbook_file "/var/opt/opscode-analytics/ssl/ca/chef-analytics.#{node['cf_ha_chef']['domain']}.crt" do
   source "#{node['cf_ha_chef']['domain']}.crt"
   owner 'root'
@@ -73,8 +100,10 @@ cookbook_file "/var/opt/opscode-analytics/ssl/ca/chef-analytics.#{node['cf_ha_ch
 end
 
 cookbook_file "/var/opt/opscode-analytics/ssl/ca/chef-analytics.#{node['cf_ha_chef']['domain']}.key" do
-  source "#{node['cf_ha_chef']['domain']}.key"
+  source "#{node['cf_ha_chef']['domain']}.crt"
   owner 'root'
   group 'root'
   mode 00644
 end
+
+execute 'opscode-analytics-ctl restart'
