@@ -24,9 +24,12 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'cf_ha_chef::hosts'
+include_recipe 'cf_ha_chef::frontend_hosts'
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::manage'
-include_recipe 'cf_ha_chef::configfile'
 include_recipe 'cf_ha_chef::mail'
 include_recipe 'cf_ha_chef::certs'
+include_recipe 'cf_ha_chef::server_install'
+include_recipe 'cf_ha_chef::stage'
+include_recipe 'cf_ha_chef::newrelic'
+include_recipe 'cf_ha_chef::sumologic'
