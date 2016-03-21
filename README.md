@@ -79,7 +79,7 @@ default['cf_ha_chef']['frontends']['fe2']['fqdn']          = ''
 default['cf_ha_chef']['frontends']['fe2']['ip_address']    = ''
 
 # New Relic configurations
-default['cf_ha_chef']['newrelic']['plugins'] = []
+default['newrelic']['plugins'] = []
 
 # Citadel
 default['citadel']['bucket'] = ''

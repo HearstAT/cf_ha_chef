@@ -110,7 +110,7 @@ unknown_local_recipient_reject_code = 550
 # If you're connected via UUCP, see also the default_transport parameter.
 #
 smtp_sasl_auth_enable = yes
-relayhost = [<%= node['cf_ha_chef']['mail']['relayhost'] -%>]:<%= node['cf_ha_chef']['mail']['relayport'] %>
+relayhost = [<%= node['cf_ha_chef']['mail']['relayhost'] %>]:<%= node['cf_ha_chef']['mail']['relayport'] %>
 smtp_sasl_security_options = noanonymous
 smtp_sasl_password_maps=hash:/etc/postfix/sasl_passwd
 

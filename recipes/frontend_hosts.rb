@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cf_ha_chef
-# Recipe:: certs
+# Recipe:: hosts
 #
 # Copyright 2016, Hearst Automation Team
 #
@@ -23,36 +23,12 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+# This recipe configures the frontend hosts file.
 
-directory '/etc/ssl/' do
-  owner 'root'
-  group 'root'
-  mode 00750
-  recursive true
+template '/etc/hosts' do
   action :create
-end
-
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.crt"
+  source 'frontend_hosts.erb'
   owner 'root'
   group 'root'
-  mode 00644
-end
-
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.key"
-  owner 'root'
-  group 'root'
-  mode 00644
-  only_if { node['cf_ha_chef']['backendprimary']['fqdn'] }
-  only_if { node['cf_ha_chef']['backendfailover']['fqdn'] }
-end
-
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.key" do
-  source 'star.hearst.at.key'
-  owner 'root'
-  group 'root'
-  mode 00644
-  not_if { node['cf_ha_chef']['backendprimary']['fqdn'] }
-  not_if { node['cf_ha_chef']['backendfailover']['fqdn'] }
+  mode '0644'
 end

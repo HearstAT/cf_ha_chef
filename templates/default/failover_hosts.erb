@@ -1,0 +1,6 @@
+# This file is managed by Chef.  Manual changes may be overwritten.
+127.0.0.1 <%= "#{node['cf_ha_chef']['backendfailover']['fqdn']} #{node['cf_ha_chef']['backendfailover']['fqdn'].split('.')[0]}" %> localhost
+::1 localhost6.localdomain6 localhost6
+
+<%= "#{node['cf_ha_chef']['backendprimary']['ip_address']} #{node['cf_ha_chef']['backendprimary']['fqdn']} #{node['cf_ha_chef']['backendprimary']['fqdn'].split('.')[0]}" %>
+<%= "#{node['cf_ha_chef']['backend_vip']['ip_address']} #{node['cf_ha_chef']['backend_vip']['fqdn']} #{node['cf_ha_chef']['backend_vip']['fqdn'].split('.')[0]}" %>

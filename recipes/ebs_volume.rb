@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cf_ha_chef
-# Recipe:: certs
+# Recipe:: ebs_volume
 #
 # Copyright 2016, Hearst Automation Team
 #
@@ -23,36 +23,19 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+# This recipe configures the EBS volume.
 
-directory '/etc/ssl/' do
-  owner 'root'
-  group 'root'
-  mode 00750
-  recursive true
-  action :create
-end
+include_recipe 'lvm::default'
 
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.crt"
-  owner 'root'
-  group 'root'
-  mode 00644
-end
+lvm_volume_group 'chef' do
+  physical_volumes node['cf_ha_chef']['ebs_device']
 
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.key"
-  owner 'root'
-  group 'root'
-  mode 00644
-  only_if { node['cf_ha_chef']['backendprimary']['fqdn'] }
-  only_if { node['cf_ha_chef']['backendfailover']['fqdn'] }
-end
+  logical_volume 'data' do
+    size '85%VG'
+    filesystem 'ext4'
+    mount_point '/var/opt/opscode/drbd/data'
+  end
 
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.key" do
-  source 'star.hearst.at.key'
-  owner 'root'
-  group 'root'
-  mode 00644
-  not_if { node['cf_ha_chef']['backendprimary']['fqdn'] }
-  not_if { node['cf_ha_chef']['backendfailover']['fqdn'] }
+  retries 5
+  retry_delay 30
 end

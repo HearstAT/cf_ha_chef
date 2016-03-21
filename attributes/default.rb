@@ -25,11 +25,13 @@
 #
 
 # Secrets Holder
-default['cf_ha_chef']['aws_secret_access_key'] = ''
 default['cf_ha_chef']['aws_access_key_id'] = ''
+default['cf_ha_chef']['aws_secret_access_key'] = ''
 
 # Pass to pull a backup and use knife ec to restore
-default['cf_ha_chef']['backup_restore'] = ''
+default['cf_ha_chef']['backup']['restore'] = false
+default['cf_ha_chef']['backup']['enable_backups'] = false
+default['cf_ha_chef']['backup']['restore_file'] = ''
 
 # S3 Bucket created by Cloudformation e.g.; /bucket-name/bucket
 default['cf_ha_chef']['s3']['backup_bucket'] = ''
@@ -55,10 +57,9 @@ default['cf_ha_chef']['ebs_device'] = ''
 # Domain provided via Route53 hosted zone
 default['cf_ha_chef']['domain'] = ''
 
-# Analytic Server Config needed by all servers
+# Analytic Server Config
+default['cf_ha_chef']['analytics']['stage_subdomain'] = ''
 default['cf_ha_chef']['analytics']['url'] = ''
-
-# Only needs to be known to the analytics server itself
 default['cf_ha_chef']['analytics']['fqdn'] = ''
 default['cf_ha_chef']['analytics']['ip_address'] = ''
 
@@ -81,7 +82,7 @@ default['cf_ha_chef']['frontends']['fe2']['fqdn']          = ''
 default['cf_ha_chef']['frontends']['fe2']['ip_address']    = ''
 
 # New Relic Configurations
-default['cf_ha_chef']['newrelic']['plugins'] = []
+default['newrelic']['plugins'] = []
 
 # Citadel
 default['citadel']['bucket'] = ''

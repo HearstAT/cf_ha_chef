@@ -23,36 +23,25 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+# This recipe configures the stage config for blue/green deployment.
 
-directory '/etc/ssl/' do
+directory '/var/opt/opscode/nginx/etc/nginx.d' do
   owner 'root'
   group 'root'
-  mode 00750
+  mode 00755
   recursive true
   action :create
 end
 
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.crt"
+template '/var/opt/opscode/nginx/etc/nginx.d/stage.conf' do
+  source 'stage.conf.erb'
   owner 'root'
   group 'root'
-  mode 00644
+  mode 00777
+  notifies :run, 'execute[restart-nginx]', :immediately
 end
 
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.key"
-  owner 'root'
-  group 'root'
-  mode 00644
-  only_if { node['cf_ha_chef']['backendprimary']['fqdn'] }
-  only_if { node['cf_ha_chef']['backendfailover']['fqdn'] }
-end
-
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.key" do
-  source 'star.hearst.at.key'
-  owner 'root'
-  group 'root'
-  mode 00644
-  not_if { node['cf_ha_chef']['backendprimary']['fqdn'] }
-  not_if { node['cf_ha_chef']['backendfailover']['fqdn'] }
+execute 'restart-nginx' do
+  command 'chef-server-ctl restart nginx'
+  action :nothing
 end
