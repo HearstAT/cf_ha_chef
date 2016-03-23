@@ -87,12 +87,13 @@ default['sumologic']['userID'] = ''
 ```
 
 ## Usage
-Insert CF template info here
+Start with the [cloudformation-chef-ha](https://github.com/HearstAT/cloudformation-chef-ha) templates, this gets pulled via that process.
 
 ## Post Install
 Due to limitation in chef and cloudformation both, there are some items that cannot be automated completely. Below are the steps that are needed taken post-cloudformation success.
+- The command that actually needs to be ran should be in the backend server outputs. However if it doesn't refer below.
 - Backend Primary - run the following command from an interactive terminal (e.g.; ssh into server)
-  - `chef-client -c '/root/.chef/cookbooks/client.rb' -z --chef-zero-port 8899 -j '/root/.chef/cookbooks/primary_post.json'`
+  - `chef-client -c '/root/.chef/cookbooks/client.rb' -z --chef-zero-port 8899 -j '/root/.chef/cookbooks/primary_post_restore.json'`
 
 
 ## Sample IAM Account Settings
