@@ -26,8 +26,8 @@
 
 include_recipe 'cf_ha_chef::hosts'
 include_recipe 'cf_ha_chef::disable_iptables'
-include_recipe 'cf_ha_chef::certs'
 include_recipe 'cf_ha_chef::server_install'
+include_recipe 'cf_ha_chef::backup'
 
 # Make sure we have LVM installed in case of failover
 package 'lvm2' do

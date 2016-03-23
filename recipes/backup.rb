@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cf_ha_chef
-# Recipe:: mail
+# Recipe:: backup
 #
 # Copyright 2016, Hearst Automation Team
 #
@@ -23,34 +23,18 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# This recipe configures the postfix
-#
+# Sets up backup script
 
-node.default['cf_ha_chef']['mail']['sasl_passwd'] = citadel['mail/sasl_passwd']
-
-%w(postfix sasl2-bin).each do |pkg|
-  package pkg do
-    action :install
-  end
-end
-
-service 'postfix' do
-  action [:enable, :start]
-end
-
-template '/etc/postfix/main.cf' do
-  source 'main.cf.erb'
-  notifies :restart, 'service[postfix]'
-end
-
-file '/etc/postfix/sasl_passwd' do
-  content node['cf_ha_chef']['mail']['sasl_passwd']
+template '/root/chef_backup.sh' do
+  source 'chef_backup.sh.erb'
   owner 'root'
   group 'root'
-  mode 00644
+  mode 00774
 end
 
-execute 'postmapcreds' do
-  command 'postmap /etc/postfix/sasl_passwd'
-  action :nothing
+cron_d 'daily-backup' do
+  minute 0
+  hour 23
+  command '/root/chef_backup.sh'
+  user 'root'
 end

@@ -26,9 +26,9 @@
 
 include_recipe 'cf_ha_chef::ebs_volume'
 include_recipe 'cf_ha_chef::disable_iptables'
-include_recipe 'cf_ha_chef::certs'
 include_recipe 'cf_ha_chef::newrelic'
 include_recipe 'cf_ha_chef::sumologic'
+include_recipe 'cf_ha_chef::backup'
 
 template '/etc/hosts' do
   action :create

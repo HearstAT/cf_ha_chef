@@ -24,6 +24,9 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+node.default['cf_ha_chef']['certs']['domain_crt'] = citadel['certs/chefserver.crt']
+node.default['cf_ha_chef']['certs']['domain_key'] = citadel['certs/chefserver.key']
+
 directory '/etc/ssl/' do
   owner 'root'
   group 'root'
@@ -32,27 +35,16 @@ directory '/etc/ssl/' do
   action :create
 end
 
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.crt"
+file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
+  content node['cf_ha_chef']['certs']['domain_crt']
   owner 'root'
   group 'root'
   mode 00644
 end
 
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.key"
+file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.key" do
+  content node['cf_ha_chef']['certs']['domain_key']
   owner 'root'
   group 'root'
   mode 00644
-  only_if { node['cf_ha_chef']['backendprimary']['fqdn'] }
-  only_if { node['cf_ha_chef']['backendfailover']['fqdn'] }
-end
-
-cookbook_file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.key" do
-  source 'star.hearst.at.key'
-  owner 'root'
-  group 'root'
-  mode 00644
-  not_if { node['cf_ha_chef']['backendprimary']['fqdn'] }
-  not_if { node['cf_ha_chef']['backendfailover']['fqdn'] }
 end

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+export BACKUP_S3=<%= node['cf_ha_chef']['s3']['backup_bucket'] %>
+export BACKUP_NAME=backup_$(date +"%d_%b_%y")
+export BACKUP_HOME='/chef-backups/'
+export CLUSTER_STATUS=$(/var/opt/opscode/keepalived/current_cluster_status)
+export CHEF_SERVER=<%= node['cf_ha_chef']['api_fqdn'] %>
+
+if [ ! -d "${BACKUP_HOME}" ]; then
+    mkdir -p ${BACKUP_HOME}
+fi
+
+if [ ${CLUSTER_STATUS} == 'master' || -z ]; then
+    /opt/opscode/embedded/bin/knife ec backup /tmp/backup/ -s https://${CHEF_SERVER} --with-user-sql
+
+    tar -czf /${BACKUP_HOME}/${BACKUP_NAME}.tar /tmp/backup/
+
+    find ${BACKUP_HOME}/* -mtime +10 -type f -delete
+
+    aws s3 sync --delete ${BACKUP_HOME} s3:/${BACKUP_S3}
+fi
