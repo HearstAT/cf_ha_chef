@@ -32,7 +32,7 @@ template '/root/chef_backup.sh' do
   mode 00774
 end
 
-cron_d 'daily-backup' do
+cron 'daily-backup' do
   minute 0
   hour 23
   command '/root/chef_backup.sh'

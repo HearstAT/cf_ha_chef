@@ -81,9 +81,6 @@ default['cf_ha_chef']['frontends']['fe1']['ip_address']    = ''
 default['cf_ha_chef']['frontends']['fe2']['fqdn']          = ''
 default['cf_ha_chef']['frontends']['fe2']['ip_address']    = ''
 
-# New Relic Configurations
-default['newrelic']['plugins'] = []
-
 # Citadel
 default['citadel']['bucket'] = ''
 default['sumologic']['userID'] = ''

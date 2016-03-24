@@ -15,7 +15,6 @@ end
 
 newrelic_meetme_plugin 'default' do
   license newrelic_license_key
-  additional_requirements node['cf_ha_chef']['newrelic']['plugins']
 end
 
 newrelic_agent_ruby 'Install' do
