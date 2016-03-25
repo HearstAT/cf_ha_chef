@@ -120,7 +120,6 @@ end
 
 # Configure for reporting and push jobs again
 execute 'opscode-reporting-ctl reconfigure'
-execute 'opscode-push-jobs-server-ctl reconfigure'
 
 # Start Again and Reconfigure after changes
 execute 'chef-server-ctl restart' do
@@ -149,16 +148,16 @@ execute 'reporting-bundle' do
 end
 
 execute 's3-analytics-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/analytics_bundle.tar.gz"
+  command "aws s3 cp #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/analytics_bundle.tar.gz"
   action :run
 end
 
 execute 's3-core-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/core_bundle.tar.gz"
+  command "aws s3 cp #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/core_bundle.tar.gz"
   action :run
 end
 
 execute 's3-reporting-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/reporting_bundle.tar.gz"
+  command "aws s3 cp #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/reporting_bundle.tar.gz"
   action :run
 end
