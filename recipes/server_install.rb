@@ -52,7 +52,6 @@ end
 # Configure all the things
 execute 'chef-server-ctl reconfigure'
 execute 'opscode-reporting-ctl reconfigure'
-execute 'opscode-push-jobs-server-ctl reconfigure'
 execute 'opscode-manage-ctl reconfigure' do
   action :run
   only_if "dpkg -s chef-manage | grep 'Status: install ok installed'"
