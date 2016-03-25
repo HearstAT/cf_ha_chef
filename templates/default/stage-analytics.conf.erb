@@ -13,8 +13,8 @@ server {
   server_name <%= node['cf_ha_chef']['analytics']['stage_subdomain'] %>.<%= node['cf_ha_chef']['domain'] %>;
 
   ssl on;
-  ssl_certificate /etc/ssl/chef.<%= node['cf_ha_chef']['domain'] %>.crt;
-  ssl_certificate_key /etc/ssl/chef.<%= node['cf_ha_chef']['domain'] %>.key;
+  ssl_certificate /var/opt/opscode/nginx/ca/chef.<%= node['cf_ha_chef']['domain'] %>.crt;
+  ssl_certificate_key /var/opt/opscode/nginx/ca/chef.<%= node['cf_ha_chef']['domain'] %>.key;
   ssl_dhparam /var/opt/opscode-analytics/ssl/ca/dhparams.pem;
 
   ssl_session_timeout 5m;

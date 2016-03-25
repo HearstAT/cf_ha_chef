@@ -41,8 +41,8 @@ oc_id['applications'] = {
   }
 }
 
-nginx['ssl_certificate'] = '/etc/ssl/chef.<%= node['cf_ha_chef']['domain'] %>.crt'
-nginx['ssl_certificate_key'] = '/etc/ssl/chef.<%= node['cf_ha_chef']['domain'] %>.key'
+nginx['ssl_certificate'] = '/var/opt/opscode/nginx/ca/chef.<%= node['cf_ha_chef']['domain'] %>.crt'
+nginx['ssl_certificate_key'] = '/var/opt/opscode/nginx/ca/chef.<%= node['cf_ha_chef']['domain'] %>.key'
 
 rabbitmq['vip'] = '<%= node['cf_ha_chef']['backend_vip']['ip_address'] %>'
 rabbitmq['node_ip_address'] = '0.0.0.0'

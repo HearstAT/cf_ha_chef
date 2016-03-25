@@ -27,7 +27,7 @@
 node.default['cf_ha_chef']['certs']['domain_crt'] = citadel['certs/chefserver.crt']
 node.default['cf_ha_chef']['certs']['domain_key'] = citadel['certs/chefserver.key']
 
-directory '/etc/ssl/' do
+directory '/var/opt/opscode/nginx/ca' do
   owner 'root'
   group 'root'
   mode 00750
@@ -35,14 +35,14 @@ directory '/etc/ssl/' do
   action :create
 end
 
-file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.crt" do
+file "/var/opt/opscode/nginx/ca/chef.#{node['cf_ha_chef']['domain']}.crt" do
   content node['cf_ha_chef']['certs']['domain_crt']
   owner 'root'
   group 'root'
   mode 00644
 end
 
-file "/etc/ssl/chef.#{node['cf_ha_chef']['domain']}.key" do
+file "/var/opt/opscode/nginx/ca/chef.#{node['cf_ha_chef']['domain']}.key" do
   content node['cf_ha_chef']['certs']['domain_key']
   owner 'root'
   group 'root'
