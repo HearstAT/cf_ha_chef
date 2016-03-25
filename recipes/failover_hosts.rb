@@ -27,7 +27,7 @@
 
 template '/etc/hosts' do
   action :create
-  source 'backend_hosts.erb'
+  source 'failover_hosts.erb'
   owner 'root'
   group 'root'
   mode '0644'

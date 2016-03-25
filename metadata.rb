@@ -4,7 +4,7 @@ maintainer_email 'atat@hearst.com'
 license 'MIT'
 description 'Installs/Configures cf_ha_chef'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '0.2.0'
+version '0.2.1'
 
 depends 'lvm'
 depends 'python'

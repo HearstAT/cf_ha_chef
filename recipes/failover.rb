@@ -24,7 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'cf_ha_chef::hosts'
+include_recipe 'cf_ha_chef::backend_hosts'
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::server_install'
 include_recipe 'cf_ha_chef::backup'
