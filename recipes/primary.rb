@@ -89,7 +89,7 @@ execute 'chef-server-ctl restart' do
   retry_delay 60
 end
 
-# Make sure we have installed the push jobs and reporting add-ons
+# Make sure we have installed reporting
 include_recipe 'cf_ha_chef::reporting'
 
 # Start Again and run backup restore if enabled
@@ -118,7 +118,7 @@ execute 'knife-backup-restore' do
   only_if { node['cf_ha_chef']['backup_restore'] }
 end
 
-# Configure for reporting and push jobs again
+# Configure for reporting
 execute 'opscode-reporting-ctl reconfigure'
 
 # Start Again and Reconfigure after changes
