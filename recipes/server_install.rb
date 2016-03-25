@@ -28,12 +28,12 @@
 include_recipe 'cf_ha_chef::reporting'
 
 execute 's3-core-bundle' do
-  command "aws s3 cp s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/core_bundle.tar.gz #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz"
+  command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/core_bundle.tar.gz #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz"
   action :run
 end
 
 execute 's3-reporting-bundle' do
-  command "aws s3 cp s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/reporting_bundle.tar.gz #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz"
+  command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/reporting_bundle.tar.gz #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz"
   action :run
 end
 
