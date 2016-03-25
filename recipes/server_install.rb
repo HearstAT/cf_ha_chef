@@ -25,7 +25,6 @@
 #
 
 # Run this recipe on every server *but* the primary to configure everything
-include_recipe 'cf_ha_chef::push_jobs'
 include_recipe 'cf_ha_chef::reporting'
 
 execute 's3-core-bundle' do

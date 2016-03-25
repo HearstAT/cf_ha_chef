@@ -91,7 +91,6 @@ end
 
 # Make sure we have installed the push jobs and reporting add-ons
 include_recipe 'cf_ha_chef::reporting'
-include_recipe 'cf_ha_chef::push_jobs'
 
 # Start Again and run backup restore if enabled
 execute 'chef-server-ctl restart' do
