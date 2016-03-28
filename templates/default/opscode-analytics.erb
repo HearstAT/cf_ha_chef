@@ -4,5 +4,5 @@
 analytics_fqdn '<%= node['cf_ha_chef']['analytics']['url'] %>'
 topology 'standalone'
 
-ssl['certificate'] = '/var/opt/opscode-analytics/ssl/ca/chef.<%= node['cf_ha_chef']['domain'] %>.crt'
-ssl['certificate_key'] = '/var/opt/opscode-analytics/ssl/ca/chef.<%= node['cf_ha_chef']['domain'] %>.key'
+ssl['certificate'] = '/var/opt/opscode/nginx/ca/chef.<%= node['cf_ha_chef']['domain'] %>.crt'
+ssl['certificate_key'] = '/var/opt/opscode/nginx/ca/chef.<%= node['cf_ha_chef']['domain'] %>.key'
