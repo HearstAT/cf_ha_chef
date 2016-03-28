@@ -1,5 +1,5 @@
 # This file is managed by Chef.  Manual changes may be overwritten.
-<% if node['ipaddress'] == node['cf_ha_chef']['frontends']['fe1']['ip_address'] -%>
+<% if node['ipaddress'] == node['cf_ha_chef']['frontends']['fe01']['ip_address'] -%>
 127.0.0.1 <%= node['cf_ha_chef']['frontends']['fe01']['fqdn'] %> <%= node['cf_ha_chef']['frontends']['fe01']['fqdn'].split('.')[0] %> localhost
 <% else -%>
 127.0.0.1 <%= node['cf_ha_chef']['frontends']['fe02']['fqdn'] %> <%= node['cf_ha_chef']['frontends']['fe02']['fqdn'].split('.')[0] %> localhost
