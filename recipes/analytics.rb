@@ -28,7 +28,6 @@
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::mail'
 include_recipe 'cf_ha_chef::certs'
-include_recipe 'cf_ha_chef::server_install'
 include_recipe 'cf_ha_chef::newrelic'
 include_recipe 'cf_ha_chef::sumologic'
 
@@ -72,7 +71,7 @@ template '/var/opt/opscode-analytics/nginx/etc/nginx.d/stage.conf' do
 end
 
 execute 's3-analytics-bundle' do
-  command "aws s3 cp s3:/#{node['cf_ha_chef']['s3']['backup_bucket']}/analytics_bundle.tar.gz #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz"
+  command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/analytics_bundle.tar.gz #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz"
   action :run
 end
 
@@ -90,20 +89,4 @@ template '/var/opt/opscode-analytics/nginx/etc/nginx.d/stage.conf' do
 end
 
 execute 'opscode-analytics-ctl reconfigure'
-
-# Put the wildcard cert into place for nginx
-cookbook_file "/var/opt/opscode-analytics/ssl/ca/chef-analytics.#{node['cf_ha_chef']['domain']}.crt" do
-  source "#{node['cf_ha_chef']['domain']}.crt"
-  owner 'root'
-  group 'root'
-  mode 00644
-end
-
-cookbook_file "/var/opt/opscode-analytics/ssl/ca/chef-analytics.#{node['cf_ha_chef']['domain']}.key" do
-  source "#{node['cf_ha_chef']['domain']}.crt"
-  owner 'root'
-  group 'root'
-  mode 00644
-end
-
 execute 'opscode-analytics-ctl restart'
