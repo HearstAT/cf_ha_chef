@@ -102,20 +102,20 @@ end
 execute 's3-backup-get' do
   command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/#{node['cf_ha_chef']['backup']['restore_file']}.tar #{Chef::Config[:file_cache_path]}/backup.tar"
   action :run
-  only_if { node['cf_ha_chef']['backup_restore'] }
+  only_if { node['cf_ha_chef']['backup']['restore'] }
 end
 
 execute 'backup-extract' do
   command "tar -xzf #{Chef::Config[:file_cache_path]}/backup.tar --strip-components=1"
   action :run
   cwd "#{Chef::Config[:file_cache_path]}"
-  only_if { node['cf_ha_chef']['backup_restore'] }
+  only_if { node['cf_ha_chef']['backup']['restore'] }
 end
 
 execute 'knife-backup-restore' do
   command "/opt/opscode/embedded/bin/knife ec restore #{Chef::Config[:file_cache_path]}/backup -s https://#{node['cf_ha_chef']['api_fqdn']} --with-user-sql --skip-useracl --concurrency 1"
   action :run
-  only_if { node['cf_ha_chef']['backup_restore'] }
+  only_if { node['cf_ha_chef']['backup']['restore'] }
 end
 
 # Configure for reporting
