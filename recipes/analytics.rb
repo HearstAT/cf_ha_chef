@@ -63,13 +63,6 @@ directory '/var/opt/opscode-analytics/nginx/etc/nginx.d/' do
   action :create
 end
 
-template '/var/opt/opscode-analytics/nginx/etc/nginx.d/stage.conf' do
-  source 'stage-analytics.conf.erb'
-  owner 'root'
-  group 'root'
-  mode 00777
-end
-
 execute 's3-analytics-bundle' do
   command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/analytics_bundle.tar.gz #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz"
   action :run

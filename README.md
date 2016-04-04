@@ -1,6 +1,11 @@
 # cf_ha_chef Cookbook
 ##Note **This is a work in progress**
 
+# IMPORTANT
+Must use [cloudformation-chef-ha](https://github.com/HearstAT/cloudformation-chef-ha) Cloudformation to utilize this cookbook.
+
+See the cloudformation counterpart [wiki](https://github.com/HearstAT/cloudformation-chef-ha/wiki) for more detailed info.
+
 ## Info
 This cookbook will install and configure a high-availability Chef server cluster from our Cloudformation templates with two backend servers, two front end servers, and a stand alone analytics server.
 
@@ -17,9 +22,6 @@ failover - for the failover back end server
 primary - for the primary back end server
 
 analytics - for the analytics server
-
-## Requirements
-Must use [cloudformation-chef-ha](https://github.com/HearstAT/cloudformation-chef-ha) Cloudformation to utilize this cookbook.
 
 ## Attributes
 ```ruby
