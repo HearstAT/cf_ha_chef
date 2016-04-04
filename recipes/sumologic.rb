@@ -65,6 +65,29 @@ node.default['sumologic']['sources'] = [
     category: 'OS/Linux/System',
     pathExpression: '/var/log/syslog'
   },
+  # Chef Server
+  {
+    name: 'chef_erchef',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef/erchef',
+    pathExpression: '/var/log/opscode/opscode-erchef/current'
+  },
+  {
+    name: 'chef_keepalived',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef/keepalived',
+    pathExpression: '/var/log/opscode/keepalived/current'
+  },
   {
     name: 'chef_nginx',
     sourceType: 'LocalFile',
@@ -86,28 +109,6 @@ node.default['sumologic']['sources'] = [
     timeZone: 'UTC',
     category: 'chef/postgresql',
     pathExpression: '/var/log/opscode/postgresql/9.2/current'
-  },
-  {
-    name: 'chef_solr',
-    sourceType: 'LocalFile',
-    automaticDateParsing: true,
-    multilineProcessingEnabled: false,
-    useAutolineMatching: true,
-    forceTimeZone: false,
-    timeZone: 'UTC',
-    category: 'chef/solr',
-    pathExpression: '/var/log/opscode/opscode-solr4/current'
-  },
-  {
-    name: 'chef_erchef',
-    sourceType: 'LocalFile',
-    automaticDateParsing: true,
-    multilineProcessingEnabled: false,
-    useAutolineMatching: true,
-    forceTimeZone: false,
-    timeZone: 'UTC',
-    category: 'chef/erchef',
-    pathExpression: '/var/log/opscode/opscode-erchef/current'
   },
   {
     name: 'chef_rabbitmq',
@@ -132,15 +133,104 @@ node.default['sumologic']['sources'] = [
     pathExpression: '/var/log/opscode/redis_lb/current'
   },
   {
-    name: 'chef_keepalived',
+    name: 'chef_solr',
     sourceType: 'LocalFile',
     automaticDateParsing: true,
     multilineProcessingEnabled: false,
     useAutolineMatching: true,
     forceTimeZone: false,
     timeZone: 'UTC',
-    category: 'chef/keepalived',
-    pathExpression: '/var/log/opscode/keepalived/current'
+    category: 'chef/solr',
+    pathExpression: '/var/log/opscode/opscode-solr4/current'
+  },
+  # Chef Analytics
+  {
+    name: 'chef_analytics_actions',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef_analytics/actions',
+    pathExpression: '/var/log/opscode-analytics/actions/current'
+  },
+  {
+    name: 'chef_analytics_actions_messages',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef_analytics/actions_messages',
+    pathExpression: '/var/log/opscode-analytics/actions_messages/current'
+  },
+  {
+    name: 'chef_analytics_alaska',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef_analytics/alaska',
+    pathExpression: '/var/log/opscode-analytics/alaska/current'
+  },
+  {
+    name: 'chef_analytics_nginx',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef_analytics/nginx',
+    pathExpression: '/var/log/opscode-analytics/nginx/*.log'
+  },
+  {
+    name: 'chef_analytics_postgresql',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef_analytics/postgresql',
+    pathExpression: '/var/log/opscode-analytics/postgresql/9.2/current'
+  },
+  {
+    name: 'chef_analytics_rabbitmq',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef_analytics/rabbitmq',
+    pathExpression: '/var/log/opscode-analytics/rabbitmq/current'
+  },
+  {
+    name: 'chef_analytics_storm',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef_analytics/storm',
+    pathExpression: '/var/log/opscode-analytics/storm/current'
+  },
+  {
+    name: 'chef_analytics_zookeeper',
+    sourceType: 'LocalFile',
+    automaticDateParsing: true,
+    multilineProcessingEnabled: false,
+    useAutolineMatching: true,
+    forceTimeZone: false,
+    timeZone: 'UTC',
+    category: 'chef_analytics/erchef',
+    pathExpression: '/var/log/opscode-analytics/zookeeper/current'
   }
 ]
 include_recipe 'sumologic-collector'
