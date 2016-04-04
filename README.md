@@ -1,5 +1,4 @@
 # cf_ha_chef Cookbook
-##Note **This is a work in progress**
 
 # IMPORTANT
 Must use [cloudformation-chef-ha](https://github.com/HearstAT/cloudformation-chef-ha) Cloudformation to utilize this cookbook.
