@@ -26,7 +26,7 @@
 # This recipe configures the postfix
 #
 
-node.default['cf_ha_chef']['mail']['sasl_passwd'] = citadel['mail/sasl_passwd']
+node.default['cf_ha_chef']['mail']['sasl_passwd'] = citadel['mail/creds']
 
 %w(postfix sasl2-bin).each do |pkg|
   package pkg do

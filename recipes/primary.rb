@@ -91,6 +91,7 @@ end
 
 # Make sure we have installed reporting
 include_recipe 'cf_ha_chef::reporting'
+include_recipe 'cf_ha_chef::push_jobs'
 
 # Start Again and run backup restore if enabled
 execute 'chef-server-ctl restart' do
@@ -108,7 +109,7 @@ end
 execute 'backup-extract' do
   command "tar -xzf #{Chef::Config[:file_cache_path]}/backup.tar --strip-components=1"
   action :run
-  cwd "#{Chef::Config[:file_cache_path]}"
+  cwd Chef::Config[:file_cache_path]
   only_if { node['cf_ha_chef']['backup']['restore'] }
 end
 
@@ -133,31 +134,17 @@ execute 'chef-server-ctl reconfigure'
 # At this point we should have a working primary backend.  Let's pack up all
 # the configs and make them available to the other machines.
 execute 'analytics-bundle' do
-  command "tar -czvf #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz /etc/opscode-analytics"
+  command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/analytics_bundle.tar.gz /etc/opscode-analytics"
   action :run
 end
 
 execute 'core-bundle' do
-  command "tar -czvf #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz /etc/opscode"
+  command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/core_bundle.tar.gz /etc/opscode"
   action :run
 end
 
 execute 'reporting-bundle' do
-  command "tar -czvf #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz /etc/opscode-reporting"
+  command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz /etc/opscode-reporting"
   action :run
 end
 
-execute 's3-analytics-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/analytics_bundle.tar.gz"
-  action :run
-end
-
-execute 's3-core-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/core_bundle.tar.gz"
-  action :run
-end
-
-execute 's3-reporting-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/reporting_bundle.tar.gz"
-  action :run
-end

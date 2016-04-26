@@ -7,7 +7,7 @@
 
 include_recipe 'python::pip'
 
-newrelic_license_key = citadel['newrelic/license_key']
+newrelic_license_key = citadel['newrelic/license']
 
 newrelic_server_monitor 'Install' do
   license newrelic_license_key

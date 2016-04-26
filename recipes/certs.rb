@@ -24,8 +24,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-node.default['cf_ha_chef']['certs']['domain_crt'] = citadel['certs/chefserver.crt']
-node.default['cf_ha_chef']['certs']['domain_key'] = citadel['certs/chefserver.key']
+node.default['cf_ha_chef']['certs']['domain_crt'] = citadel['certs/crt']
+node.default['cf_ha_chef']['certs']['domain_key'] = citadel['certs/key']
 
 directory '/var/opt/opscode/nginx/ca' do
   owner 'root'
