@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cf_ha_chef
-# Recipe:: reproting
+# Recipe:: chef_addons
 #
 # Copyright 2016, Hearst Automation Team
 #
@@ -25,6 +25,5 @@
 #
 # This recipe installs the reporting UI add-on.
 
-package 'opscode-reporting' do
-  action :install
-end
+package 'opscode-reporting'
+package 'opscode-push-jobs-server'

@@ -93,9 +93,8 @@ execute 'chef-server-ctl restart' do
   retry_delay 60
 end
 
-# Make sure we have installed reporting
-include_recipe 'cf_ha_chef::reporting'
-include_recipe 'cf_ha_chef::push_jobs'
+# Install any selected chef addons
+include_recipe 'cf_ha_chef::chef_addons'
 
 # Start Again and run backup restore if enabled
 execute 'chef-server-ctl restart' do
@@ -150,6 +149,11 @@ end
 
 execute 'reporting-bundle' do
   command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz /etc/opscode-reporting"
+  action :run
+end
+
+execute 'push-bundle' do
+  command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/push_bundle.tar.gz /etc/opscode-push-jobs-server"
   action :run
 end
 

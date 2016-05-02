@@ -25,7 +25,7 @@
 #
 
 # Run this recipe on every server *but* the primary to configure everything
-include_recipe 'cf_ha_chef::reporting'
+include_recipe 'cf_ha_chef::chef_addons'
 
 # Unpack the server files
 execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/core_bundle.tar.gz" do
@@ -35,6 +35,12 @@ end
 
 # Unpack the reporting files
 execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" do
+  action :run
+  cwd '/'
+end
+
+# Unpack the push files
+execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/push_bundle.tar.gz" do
   action :run
   cwd '/'
 end
