@@ -27,7 +27,14 @@
 package 'chef-manage'
 package 'chef-server-core'
 
-include_recipe 'cf_ha_chef::frontend_hosts'
+template '/etc/hosts' do
+  action :create
+  source 'frontend_hosts.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::manage'
 include_recipe 'cf_ha_chef::mail'

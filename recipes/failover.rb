@@ -27,7 +27,14 @@
 package 'chef-ha'
 package 'chef-server-core'
 
-include_recipe 'cf_ha_chef::failover_hosts'
+template '/etc/hosts' do
+  action :create
+  source 'failover_hosts.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::server_install'
 include_recipe 'cf_ha_chef::backup'
