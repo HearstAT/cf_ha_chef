@@ -105,7 +105,7 @@ execute 'chef-server-ctl restart' do
 end
 
 execute 's3-backup-get' do
-  command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/#{node['cf_ha_chef']['backup']['restore_file']}.tar #{Chef::Config[:file_cache_path]}/backup.tar"
+  command "cp -f #{node['cf_ha_chef']['s3']['dir']}/#{node['cf_ha_chef']['backup']['restore_file']}.tar #{Chef::Config[:file_cache_path]}/backup.tar"
   action :run
   only_if { node['cf_ha_chef']['backup']['restore'] }
 end
