@@ -24,6 +24,9 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+package 'chef-ha'
+package 'chef-server-core'
+
 include_recipe 'cf_ha_chef::failover_hosts'
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::server_install'

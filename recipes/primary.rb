@@ -24,6 +24,10 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+
+package 'chef-server-core'
+package 'chef-ha'
+
 include_recipe 'cf_ha_chef::ebs_volume'
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::newrelic'
