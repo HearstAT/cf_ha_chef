@@ -78,5 +78,5 @@ template '/var/opt/opscode-analytics/nginx/etc/nginx.d/stage.conf' do
   mode 00777
 end
 
-execute 'opscode-analytics-ctl reconfigure'
+execute 'opscode-analytics-ctl reconfigure --accept-license'
 execute 'opscode-analytics-ctl restart'
