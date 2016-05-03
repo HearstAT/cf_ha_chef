@@ -40,7 +40,7 @@ execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" d
 end
 
 # Unpack the push files
-execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/push_bundle.tar.gz" do
+execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" do
   action :run
   cwd '/'
 end
@@ -49,7 +49,7 @@ end
 execute 'chef-server-ctl reconfigure'
 execute 'opscode-push-jobs-server-ctl reconfigure'
 execute 'opscode-reporting-ctl reconfigure'
-execute 'opscode-manage-ctl reconfigure' do
+execute 'opscode-manage-ctl reconfigure --accept-license' do
   action :run
   only_if "dpkg -s chef-manage | grep 'Status: install ok installed'"
 end
