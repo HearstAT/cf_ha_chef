@@ -30,8 +30,12 @@ package 'chef-ha'
 
 include_recipe 'cf_ha_chef::ebs_volume'
 include_recipe 'cf_ha_chef::disable_iptables'
-include_recipe 'cf_ha_chef::newrelic'
-include_recipe 'cf_ha_chef::sumologic'
+if node['cf_ha_chef']['newrelic']['enable']
+  include_recipe 'cf_ha_chef::newrelic'
+end
+if node['cf_ha_chef']['sumologic']['enable']
+  include_recipe 'cf_ha_chef::sumologic'
+end
 include_recipe 'cf_ha_chef::backup'
 
 template '/etc/hosts' do

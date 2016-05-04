@@ -86,4 +86,8 @@ default['citadel']['bucket'] = ''
 default['sumologic']['userID'] = ''
 
 # Newrelic
+default['cf_ha_chef']['newrelic']['enable'] = true
 default['cf_ha_chef']['newrelic']['appname'] = ''
+
+# Sumologic
+default['cf_ha_chef']['sumologic']['enable'] = true
