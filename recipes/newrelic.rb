@@ -7,17 +7,31 @@
 
 include_recipe 'python::pip'
 
-newrelic_license_key = citadel['newrelic/license']
-
 newrelic_server_monitor 'Install' do
-  license newrelic_license_key
+  license citadel['newrelic/license']
 end
 
 newrelic_meetme_plugin 'default' do
-  license newrelic_license_key
+  license citadel['newrelic/license']
 end
 
-newrelic_agent_ruby 'Install' do
-  license newrelic_license_key
-  app_name 'Chef_Server_Stack'
+template "/opt/opscode/embedded/service/oc_id/config/newrelic.yml" do
+  source 'newrelic.yml.erb'
+  owner 'root'
+  group 'root'
+  variables({
+       license: citadel['newrelic/license']
+  })
+  mode 00644
 end
+
+template "/var/opt/chef-manage/etc/newrelic.yml" do
+  source 'newrelic.yml.erb'
+  owner 'root'
+  group 'root'
+  variables({
+       license: citadel['newrelic/license']
+  })
+  mode 00644
+end
+

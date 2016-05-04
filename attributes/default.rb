@@ -84,3 +84,6 @@ default['cf_ha_chef']['frontends']['fe2']['ip_address']    = ''
 # Citadel
 default['citadel']['bucket'] = ''
 default['sumologic']['userID'] = ''
+
+# Newrelic
+default['cf_ha_chef']['newrelic']['appname'] = ''
