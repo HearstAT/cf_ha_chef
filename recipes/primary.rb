@@ -127,7 +127,7 @@ execute 'knife-backup-restore' do
 end
 
 # Configure for reporting
-execute 'opscode-reporting-ctl reconfigure'
+execute 'opscode-reporting-ctl reconfigure --accept-license'
 execute 'opscode-push-jobs-server-ctl reconfigure'
 
 # Start Again and Reconfigure after changes
