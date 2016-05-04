@@ -33,5 +33,6 @@ template "/var/opt/chef-manage/etc/newrelic.yml" do
        license: citadel['newrelic/license']
   })
   mode 00644
+  only_if "dpkg -s chef-manage | grep 'Status: install ok installed'"
 end
 
