@@ -36,14 +36,18 @@ template '/etc/hosts' do
 end
 
 include_recipe 'cf_ha_chef::disable_iptables'
-if node['cf_ha_chef']['newrelic']['enable']
-  include_recipe 'cf_ha_chef::newrelic'
-end
 include_recipe 'cf_ha_chef::manage'
 include_recipe 'cf_ha_chef::mail'
 include_recipe 'cf_ha_chef::certs'
 include_recipe 'cf_ha_chef::server_install'
 include_recipe 'cf_ha_chef::stage'
+if node['cf_ha_chef']['newrelic']['enable']
+  include_recipe 'cf_ha_chef::newrelic'
+end
 if node['cf_ha_chef']['sumologic']['enable']
   include_recipe 'cf_ha_chef::sumologic'
+end
+
+execute 'chef-manage-restart' do
+  command 'chef-manage-ctl restart'
 end

@@ -49,7 +49,7 @@ end
 execute 'chef-server-ctl reconfigure'
 execute 'opscode-push-jobs-server-ctl reconfigure'
 execute 'opscode-reporting-ctl reconfigure --accept-license'
-execute 'opscode-manage-ctl reconfigure --accept-license' do
+execute 'chef-manage-ctl reconfigure --accept-license' do
   action :run
   only_if "dpkg -s chef-manage | grep 'Status: install ok installed'"
 end
