@@ -33,8 +33,8 @@ default['cf_ha_chef']['backup']['restore'] = false
 default['cf_ha_chef']['backup']['enable_backups'] = false
 default['cf_ha_chef']['backup']['restore_file'] = ''
 
-# S3 Bucket created by Cloudformation e.g.; /bucket-name/bucket
-default['cf_ha_chef']['s3']['backup_bucket'] = ''
+# S3 Bucket mount location accomplished during CFN
+default['cf_ha_chef']['s3']['dir'] = ''
 
 # Manage Attributes
 default['cf_ha_chef']['manage']['signupdisable'] = ''
@@ -84,3 +84,10 @@ default['cf_ha_chef']['frontends']['fe2']['ip_address']    = ''
 # Citadel
 default['citadel']['bucket'] = ''
 default['sumologic']['userID'] = ''
+
+# Newrelic
+default['cf_ha_chef']['newrelic']['enable'] = true
+default['cf_ha_chef']['newrelic']['appname'] = ''
+
+# Sumologic
+default['cf_ha_chef']['sumologic']['enable'] = true

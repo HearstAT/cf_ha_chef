@@ -24,9 +24,25 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'cf_ha_chef::failover_hosts'
+package 'chef-ha'
+package 'chef-server-core'
+
+template '/etc/hosts' do
+  action :create
+  source 'failover_hosts.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::server_install'
+if node['cf_ha_chef']['newrelic']['enable']
+  include_recipe 'cf_ha_chef::newrelic'
+end
+if node['cf_ha_chef']['sumologic']['enable']
+  include_recipe 'cf_ha_chef::sumologic'
+end
 include_recipe 'cf_ha_chef::backup'
 
 # Make sure we have LVM installed in case of failover

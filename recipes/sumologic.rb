@@ -27,8 +27,8 @@
 
 node.default['sumologic']['credentials'] = nil
 
-node.default['sumologic']['accessID'] = citadel['sumologic/accessID']
-node.default['sumologic']['accessKey'] = citadel['sumologic/accessKey']
+node.default['sumologic']['accessID'] = citadel['sumologic/access_id']
+node.default['sumologic']['accessKey'] = citadel['sumologic/access_key']
 node.default['sumologic']['password'] = citadel['sumologic/password']
 
 node.default['sumologic']['sources'] = [

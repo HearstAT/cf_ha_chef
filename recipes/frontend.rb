@@ -24,12 +24,30 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'cf_ha_chef::frontend_hosts'
+package 'chef-manage'
+package 'chef-server-core'
+
+template '/etc/hosts' do
+  action :create
+  source 'frontend_hosts.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::manage'
 include_recipe 'cf_ha_chef::mail'
 include_recipe 'cf_ha_chef::certs'
 include_recipe 'cf_ha_chef::server_install'
 include_recipe 'cf_ha_chef::stage'
-include_recipe 'cf_ha_chef::newrelic'
-include_recipe 'cf_ha_chef::sumologic'
+if node['cf_ha_chef']['newrelic']['enable']
+  include_recipe 'cf_ha_chef::newrelic'
+end
+if node['cf_ha_chef']['sumologic']['enable']
+  include_recipe 'cf_ha_chef::sumologic'
+end
+
+execute 'chef-manage-restart' do
+  command 'chef-manage-ctl restart'
+end

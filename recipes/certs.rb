@@ -24,8 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-node.default['cf_ha_chef']['certs']['domain_crt'] = citadel['certs/chefserver.crt']
-node.default['cf_ha_chef']['certs']['domain_key'] = citadel['certs/chefserver.key']
+node.default['cf_ha_chef']['certs']['domain_crt'] = citadel['certs/crt']
 
 directory '/var/opt/opscode/nginx/ca' do
   owner 'root'
@@ -42,9 +41,12 @@ file "/var/opt/opscode/nginx/ca/chef.#{node['cf_ha_chef']['domain']}.crt" do
   mode 00644
 end
 
-file "/var/opt/opscode/nginx/ca/chef.#{node['cf_ha_chef']['domain']}.key" do
-  content node['cf_ha_chef']['certs']['domain_key']
+template "/var/opt/opscode/nginx/ca/chef.#{node['cf_ha_chef']['domain']}.key" do
+  source 'chef.key.erb'
   owner 'root'
   group 'root'
+  variables({
+       key: citadel['certs/key']
+  })
   mode 00644
 end

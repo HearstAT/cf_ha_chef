@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cf_ha_chef
-# Recipe:: hosts
+# Recipe:: chef_addons
 #
 # Copyright 2016, Hearst Automation Team
 #
@@ -23,12 +23,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# This recipe configures the frontend hosts file.
+# This recipe installs the reporting UI add-on.
 
-template '/etc/hosts' do
-  action :create
-  source 'frontend_hosts.erb'
-  owner 'root'
-  group 'root'
-  mode '0644'
-end
+package 'opscode-reporting'
+package 'opscode-push-jobs-server'

@@ -25,34 +25,31 @@
 #
 
 # Run this recipe on every server *but* the primary to configure everything
-include_recipe 'cf_ha_chef::reporting'
-
-execute 's3-core-bundle' do
-  command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/core_bundle.tar.gz #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz"
-  action :run
-end
-
-execute 's3-reporting-bundle' do
-  command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/reporting_bundle.tar.gz #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz"
-  action :run
-end
+include_recipe 'cf_ha_chef::chef_addons'
 
 # Unpack the server files
-execute "tar -zxvf #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz" do
+execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/core_bundle.tar.gz" do
   action :run
   cwd '/'
 end
 
 # Unpack the reporting files
-execute "tar -zxvf #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz" do
+execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" do
+  action :run
+  cwd '/'
+end
+
+# Unpack the push files
+execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" do
   action :run
   cwd '/'
 end
 
 # Configure all the things
 execute 'chef-server-ctl reconfigure'
-execute 'opscode-reporting-ctl reconfigure'
-execute 'opscode-manage-ctl reconfigure' do
+execute 'opscode-push-jobs-server-ctl reconfigure'
+execute 'opscode-reporting-ctl reconfigure --accept-license'
+execute 'chef-manage-ctl reconfigure --accept-license' do
   action :run
   only_if "dpkg -s chef-manage | grep 'Status: install ok installed'"
 end

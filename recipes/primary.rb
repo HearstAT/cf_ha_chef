@@ -24,10 +24,18 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+
+package 'chef-server-core'
+package 'chef-ha'
+
 include_recipe 'cf_ha_chef::ebs_volume'
 include_recipe 'cf_ha_chef::disable_iptables'
-include_recipe 'cf_ha_chef::newrelic'
-include_recipe 'cf_ha_chef::sumologic'
+if node['cf_ha_chef']['newrelic']['enable']
+  include_recipe 'cf_ha_chef::newrelic'
+end
+if node['cf_ha_chef']['sumologic']['enable']
+  include_recipe 'cf_ha_chef::sumologic'
+end
 include_recipe 'cf_ha_chef::backup'
 
 template '/etc/hosts' do
@@ -89,8 +97,8 @@ execute 'chef-server-ctl restart' do
   retry_delay 60
 end
 
-# Make sure we have installed reporting
-include_recipe 'cf_ha_chef::reporting'
+# Install any selected chef addons
+include_recipe 'cf_ha_chef::chef_addons'
 
 # Start Again and run backup restore if enabled
 execute 'chef-server-ctl restart' do
@@ -100,7 +108,7 @@ execute 'chef-server-ctl restart' do
 end
 
 execute 's3-backup-get' do
-  command "aws s3 cp s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/#{node['cf_ha_chef']['backup']['restore_file']}.tar #{Chef::Config[:file_cache_path]}/backup.tar"
+  command "cp -f #{node['cf_ha_chef']['s3']['dir']}/#{node['cf_ha_chef']['backup']['restore_file']}.tar #{Chef::Config[:file_cache_path]}/backup.tar"
   action :run
   only_if { node['cf_ha_chef']['backup']['restore'] }
 end
@@ -108,7 +116,7 @@ end
 execute 'backup-extract' do
   command "tar -xzf #{Chef::Config[:file_cache_path]}/backup.tar --strip-components=1"
   action :run
-  cwd "#{Chef::Config[:file_cache_path]}"
+  cwd Chef::Config[:file_cache_path]
   only_if { node['cf_ha_chef']['backup']['restore'] }
 end
 
@@ -119,7 +127,8 @@ execute 'knife-backup-restore' do
 end
 
 # Configure for reporting
-execute 'opscode-reporting-ctl reconfigure'
+execute 'opscode-reporting-ctl reconfigure --accept-license'
+execute 'opscode-push-jobs-server-ctl reconfigure'
 
 # Start Again and Reconfigure after changes
 execute 'chef-server-ctl restart' do
@@ -133,31 +142,22 @@ execute 'chef-server-ctl reconfigure'
 # At this point we should have a working primary backend.  Let's pack up all
 # the configs and make them available to the other machines.
 execute 'analytics-bundle' do
-  command "tar -czvf #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz /etc/opscode-analytics"
+  command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/analytics_bundle.tar.gz /etc/opscode-analytics"
   action :run
 end
 
 execute 'core-bundle' do
-  command "tar -czvf #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz /etc/opscode"
+  command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/core_bundle.tar.gz /etc/opscode"
   action :run
 end
 
 execute 'reporting-bundle' do
-  command "tar -czvf #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz /etc/opscode-reporting"
+  command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz /etc/opscode-reporting"
   action :run
 end
 
-execute 's3-analytics-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/analytics_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/analytics_bundle.tar.gz"
+execute 'push-bundle' do
+  command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/push_bundle.tar.gz /etc/opscode-push-jobs-server"
   action :run
 end
 
-execute 's3-core-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/core_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/core_bundle.tar.gz"
-  action :run
-end
-
-execute 's3-reporting-bundle' do
-  command "aws s3 cp #{Chef::Config[:file_cache_path]}/reporting_bundle.tar.gz s3://#{node['cf_ha_chef']['s3']['backup_bucket']}/reporting_bundle.tar.gz"
-  action :run
-end

@@ -1,10 +1,12 @@
 name 'cf_ha_chef'
 maintainer 'Hearst Automation Team'
 maintainer_email 'atat@hearst.com'
+source_url 'https://github.com/HearstAT/cf_ha_chef'
+issues_url 'https://github.com/HearstAT/cf_ha_chef/issues'
 license 'MIT'
 description 'Installs/Configures cf_ha_chef'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '0.2.1'
+version '1.0.0'
 
 depends 'lvm'
 depends 'python'
@@ -12,3 +14,4 @@ depends 'citadel'
 depends 'newrelic'
 depends 'newrelic_meetme_plugin'
 depends 'sumologic-collector'
+depends 'apt-chef'
