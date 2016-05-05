@@ -23,6 +23,7 @@ template "/opt/opscode/embedded/service/oc_id/config/newrelic.yml" do
        license: citadel['newrelic/license']
   })
   mode 00644
+  only_if { ::File.directory?("/opt/opscode/embedded/service/oc_id/config") }
 end
 
 template "/var/opt/chef-manage/etc/newrelic.yml" do
@@ -33,6 +34,6 @@ template "/var/opt/chef-manage/etc/newrelic.yml" do
        license: citadel['newrelic/license']
   })
   mode 00644
-  only_if "dpkg -s chef-manage | grep 'Status: install ok installed'"
+  only_if { ::File.directory?("/var/opt/chef-manage/etc") }
 end
 
