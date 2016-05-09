@@ -168,3 +168,4 @@ execute 'push-bundle' do
   action :run
 end
 
+include_recipe 'cf_ha_chef::certs'

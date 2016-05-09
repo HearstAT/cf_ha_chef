@@ -29,7 +29,6 @@ package 'opscode-analytics'
 
 include_recipe 'cf_ha_chef::disable_iptables'
 include_recipe 'cf_ha_chef::mail'
-include_recipe 'cf_ha_chef::certs'
 if node['cf_ha_chef']['newrelic']['enable']
   include_recipe 'cf_ha_chef::newrelic'
 end
