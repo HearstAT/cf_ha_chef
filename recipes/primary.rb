@@ -24,6 +24,13 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+if node['cf_ha_chef']['database']['ext_enable']
+  node.default['cf_ha_chef']['database']['username'] = citadel['db/username']
+  node.default['cf_ha_chef']['database']['password'] = citadel['db/password']
+end
+
+node.default['cf_ha_chef']['aws_access_key_id'] = citadel['aws/access_key']
+node.default['cf_ha_chef']['aws_secret_access_key'] = citadel['aws/secret_key']
 
 package 'chef-server-core'
 package 'chef-ha'

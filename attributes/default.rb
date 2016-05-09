@@ -24,10 +24,6 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-# Secrets Holder
-default['cf_ha_chef']['aws_access_key_id'] = ''
-default['cf_ha_chef']['aws_secret_access_key'] = ''
-
 # Pass to pull a backup and use knife ec to restore
 default['cf_ha_chef']['backup']['restore'] = false
 default['cf_ha_chef']['backup']['enable_backups'] = false
@@ -56,6 +52,15 @@ default['cf_ha_chef']['ebs_device'] = ''
 
 # Domain provided via Route53 hosted zone
 default['cf_ha_chef']['domain'] = ''
+
+# Database Config
+default['cf_ha_chef']['database']['ext_enable'] = ''
+default['cf_ha_chef']['database']['port'] = ''
+default['cf_ha_chef']['database']['url'] = ''
+
+# Cookbook Config
+default['cf_ha_chef']['cookbook']['ext_enable'] = ''
+default['cf_ha_chef']['cookbook']['bucket'] = ''
 
 # Analytic Server Config
 default['cf_ha_chef']['analytics']['stage_subdomain'] = ''

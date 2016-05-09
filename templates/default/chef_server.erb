@@ -11,26 +11,26 @@ ha['ebs_volume_id'] = '<%= node['cf_ha_chef']['ebs_volume_id'] %>'
 ha['ebs_device'] = '<%= node['cf_ha_chef']['ebs_device'] %>'
 
 server '<%= node['cf_ha_chef']['frontends']['fe01']['fqdn'] %>',
-  :ipaddress => '<%= node['cf_ha_chef']['frontends']['fe01']['ip_address'] %>',
-  :role => 'frontend'
+  ipaddress: '<%= node['cf_ha_chef']['frontends']['fe01']['ip_address'] %>',
+  role: 'frontend'
 
 server '<%= node['cf_ha_chef']['frontends']['fe02']['fqdn'] %>',
-  :ipaddress => '<%= node['cf_ha_chef']['frontends']['fe02']['ip_address'] %>',
-  :role => 'frontend'
+  ipaddress: '<%= node['cf_ha_chef']['frontends']['fe02']['ip_address'] %>',
+  role: 'frontend'
 
 server '<%= node['cf_ha_chef']['backendprimary']['fqdn'] %>',
-  :ipaddress => '<%= node['cf_ha_chef']['backendprimary']['ip_address'] %>',
-  :role => 'backend',
-  :bootstrap => true
+  ipaddress: '<%= node['cf_ha_chef']['backendprimary']['ip_address'] %>',
+  role: 'backend',
+  bootstrap: true
 
 server '<%= node['cf_ha_chef']['backendfailover']['fqdn'] %>',
-  :ipaddress => '<%= node['cf_ha_chef']['backendfailover']['ip_address'] %>',
-  :role => 'backend'
+  ipaddress: '<%= node['cf_ha_chef']['backendfailover']['ip_address'] %>',
+  role: 'backend'
 
 backend_vip '<%= node['cf_ha_chef']['backend_vip']['fqdn'] %>',
-  :ipaddress => '<%= node['cf_ha_chef']['backend_vip']['ip_address'] %>',
-  :device => 'eth0',
-  :heartbeat_device => 'eth0'
+  ipaddress: '<%= node['cf_ha_chef']['backend_vip']['ip_address'] %>',
+  device: 'eth0',
+  heartbeat_device: 'eth0'
 
 api_fqdn '<%= node['cf_ha_chef']['api_fqdn'] %>'
 
@@ -48,3 +48,20 @@ rabbitmq['vip'] = '<%= node['cf_ha_chef']['backend_vip']['ip_address'] %>'
 rabbitmq['node_ip_address'] = '0.0.0.0'
 
 opscode_erchef['max_request_size'] = 1000000
+
+<% if node['cf_ha_chef']['cookbook']['ext_enable'] == true %>
+bookshelf['enable'] = false
+bookshelf['vip'] = "https://s3.amazonaws.com"
+bookshelf['external_url'] = "https://s3.amazonaws.com"
+bookshelf['access_key_id'] = "<%= node['cf_ha_chef']['aws_access_key_id'] %>"
+bookshelf['secret_access_key'] = "<%= node['cf_ha_chef']['aws_secret_access_key'] %>"
+opscode_erchef['s3_bucket'] = "<%= node['cf_ha_chef']['cookbook']['bucket'] %>"
+<% end %>
+
+<% if node['cf_ha_chef']['database']['ext_enable'] == true %>
+postgresql['external'] = true
+postgresql['db_superuser'] = "<%= node['cf_ha_chef']['database']['user'] %>"
+postgresql['db_superuser_password'] = "<%= node['cf_ha_chef']['database']['password'] %>"
+postgresql['port'] = "<%= node['cf_ha_chef']['database']['port'] %>"
+postgresql['vip'] = "<%= node['cf_ha_chef']['database']['vip'] %>"
+<% end %>
