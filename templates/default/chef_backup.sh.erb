@@ -15,4 +15,6 @@ if [ ${CLUSTER_STATUS} == 'master' || -z ]; then
     tar -czf /${BACKUP_HOME}/${BACKUP_NAME}.tar /tmp/backup/
 
     find ${BACKUP_HOME}/* -mtime +10 -type f -delete
+
+    rm -rf /tmp/backup/*
 fi

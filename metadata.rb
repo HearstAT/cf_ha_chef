@@ -6,7 +6,7 @@ issues_url 'https://github.com/HearstAT/cf_ha_chef/issues'
 license 'MIT'
 description 'Installs/Configures cf_ha_chef'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '1.0.0'
+version '1.1.0'
 
 depends 'lvm'
 depends 'python'
@@ -15,3 +15,4 @@ depends 'newrelic'
 depends 'newrelic_meetme_plugin'
 depends 'sumologic-collector'
 depends 'apt-chef'
+depends 'letsencrypt'
