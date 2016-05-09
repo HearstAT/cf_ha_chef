@@ -25,6 +25,16 @@
 #
 # This recipe configures the stage config for blue/green deployment.
 
+execute 'restart-nginx' do
+  command 'chef-server-ctl restart nginx'
+  action :nothing
+end
+
+execute 'sleep' do
+  command 'sleep 30'
+  action :nothing
+end
+
 directory '/var/opt/opscode/nginx/etc/nginx.d' do
   owner 'root'
   group 'root'
@@ -33,15 +43,27 @@ directory '/var/opt/opscode/nginx/etc/nginx.d' do
   action :create
 end
 
-template '/var/opt/opscode/nginx/etc/nginx.d/stage.conf' do
-  source 'stage.conf.erb'
+template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_ha_chef']['prime_domain']}.conf" do
+  source 'site.conf.erb'
   owner 'root'
   group 'root'
   mode 00777
+  variables ({
+    domain: node['cf_ha_chef']['prime_domain']
+  })
+  notifies :run, 'execute[sleep]', :immediately
   notifies :run, 'execute[restart-nginx]', :immediately
 end
 
-execute 'restart-nginx' do
-  command 'chef-server-ctl restart nginx'
-  action :nothing
+template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_ha_chef']['secondary_domain']}.conf" do
+  source 'site.conf.erb'
+  owner 'root'
+  group 'root'
+  mode 00777
+  variables ({
+    domain: node['cf_ha_chef']['secondary_domain']
+  })
+  only_if { node['cf_ha_chef']['secondary_domain'] }
+  notifies :run, 'execute[sleep]', :immediately
+  notifies :run, 'execute[restart-nginx]', :immediately
 end

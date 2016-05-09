@@ -24,29 +24,64 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-node.default['cf_ha_chef']['certs']['domain_crt'] = citadel['certs/crt']
-
-directory '/var/opt/opscode/nginx/ca' do
+directory "#{node['cf_ha_chef']['s3']['dir']}/certs" do
   owner 'root'
   group 'root'
-  mode 00750
   recursive true
   action :create
 end
 
-file "/var/opt/opscode/nginx/ca/chef.#{node['cf_ha_chef']['domain']}.crt" do
-  content node['cf_ha_chef']['certs']['domain_crt']
-  owner 'root'
-  group 'root'
-  mode 00644
+include_recipe 'letsencrypt'
+
+node.default['letsencrypt']['contact'] = node['cf_ha_chef']['letsencrypt']['contact']
+node.default['letsencrypt']['endpoint'] = node['cf_ha_chef']['letsencrypt']['endpoint']
+
+execute 'restart-nginx' do
+  command 'chef-server-ctl restart nginx'
+  action :nothing
 end
 
-template "/var/opt/opscode/nginx/ca/chef.#{node['cf_ha_chef']['domain']}.key" do
-  source 'chef.key.erb'
-  owner 'root'
-  group 'root'
-  variables({
-       key: citadel['certs/key']
-  })
-  mode 00644
+execute 'sleep' do
+  command 'sleep 30'
+  action :nothing
+end
+
+# Generate selfsigned certificate so nginx can start
+letsencrypt_selfsigned node['cf_ha_chef']['endpoint'] do
+  crt "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['prime_domain']}.crt"
+  key "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['prime_domain']}.key"
+  not_if do ::File.exists?("#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['prime_domain']}.crt") end
+end
+
+# Generate real cert
+letsencrypt_certificate "chef.#{node['cf_ha_chef']['prime_domain']}" do
+  fullchain "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['prime_domain']}.crt"
+  key "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['prime_domain']}.key"
+  alt_names ["analytics.#{node['cf_ha_chef']['prime_domain']}",
+             "#{node['cf_ha_chef']['analytics']['stage_subdomain']}.#{node['cf_ha_chef']['prime_domain']}",
+             "#{node['cf_ha_chef']['stage_subdomain']}.#{node['cf_ha_chef']['prime_domain']}"]
+  method 'http'
+  wwwroot '/var/opt/opscode/nginx/html'
+  notifies :run, 'execute[sleep]', :immediately
+  notifies :run, 'execute[restart-nginx]', :immediately
+end
+
+letsencrypt_selfsigned node['cf_ha_chef']['endpoint'] do
+  crt "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['secondary_domain']}.crt"
+  key "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['secondary_domain']}.key"
+  not_if do ::File.exists?("#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['secondary_domain']}.crt") end
+  only_if { node['cf_ha_chef']['secondary_domain'] }
+end
+
+letsencrypt_certificate "chef.#{node['cf_ha_chef']['secondary_domain']}" do
+  fullchain "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['secondary_domain']}.crt"
+  key "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['secondary_domain']}.key"
+  alt_names ["analytics.#{node['cf_ha_chef']['secondary_domain']}",
+             "#{node['cf_ha_chef']['analytics']['stage_subdomain']}.#{node['cf_ha_chef']['secondary_domain']}",
+             "#{node['cf_ha_chef']['stage_subdomain']}.#{node['cf_ha_chef']['secondary_domain']}"]
+  method 'http'
+  wwwroot '/var/opt/opscode/nginx/html'
+  only_if { node['cf_ha_chef']['secondary_domain'] }
+  notifies :run, 'execute[sleep]', :immediately
+  notifies :run, 'execute[restart-nginx]', :immediately
 end
