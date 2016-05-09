@@ -49,6 +49,7 @@ template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_ha_chef']['prime_domain'
   group 'root'
   mode 00777
   variables ({
+    subdomains: [node['cf_ha_chef']['stage_subdomain']],
     domain: node['cf_ha_chef']['prime_domain']
   })
   notifies :run, 'execute[sleep]', :immediately
@@ -61,6 +62,7 @@ template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_ha_chef']['secondary_dom
   group 'root'
   mode 00777
   variables ({
+    subdomains: ["chef", node['cf_ha_chef']['stage_subdomain']],
     domain: node['cf_ha_chef']['secondary_domain']
   })
   only_if { node['cf_ha_chef']['secondary_domain'] }

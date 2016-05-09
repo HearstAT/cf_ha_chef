@@ -1,6 +1,6 @@
 server {
   listen 443;
-  server_name <% node['cf_ha_chef']['subdomains'].each do |sub| %> <%= sub %>.<%= @domain %> <% end -%>;
+  server_name <% @subdomains.each do |sub| %> <%= sub %>.<%= @domain %><% end -%>;
 
   access_log /var/log/opscode/nginx/access.log opscode;
     ssl on;
