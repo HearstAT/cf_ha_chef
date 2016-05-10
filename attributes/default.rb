@@ -51,7 +51,8 @@ default['cf_ha_chef']['ebs_volume_id'] = ''
 default['cf_ha_chef']['ebs_device'] = ''
 
 # Domain provided via Route53 hosted zone
-default['cf_ha_chef']['domain'] = ''
+default['cf_ha_chef']['prime_domain'] = ''
+default['cf_ha_chef']['secondary_domain'] = ''
 
 # Database Config
 default['cf_ha_chef']['database']['ext_enable'] = ''
