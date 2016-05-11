@@ -59,6 +59,7 @@ letsencrypt_certificate "chef.#{node['cf_ha_chef']['prime_domain']}" do
              "#{node['cf_ha_chef']['stage_subdomain']}.#{node['cf_ha_chef']['prime_domain']}"]
   method 'http'
   wwwroot '/var/opt/opscode/nginx/html'
+  only_if { node['hostname'] == node['cf_ha_chef']['frontends']['fe01']['fqdn'] }
   notifies :run, 'execute[sleep]', :immediately
   notifies :run, 'execute[restart-nginx]', :immediately
 end
@@ -78,6 +79,7 @@ letsencrypt_certificate "chef.#{node['cf_ha_chef']['secondary_domain']}" do
              "#{node['cf_ha_chef']['stage_subdomain']}.#{node['cf_ha_chef']['secondary_domain']}"]
   method 'http'
   wwwroot '/var/opt/opscode/nginx/html'
+  only_if { node['hostname'] == node['cf_ha_chef']['frontends']['fe01']['fqdn'] }
   only_if { node['cf_ha_chef']['secondary_domain'] }
   notifies :run, 'execute[sleep]', :immediately
   notifies :run, 'execute[restart-nginx]', :immediately

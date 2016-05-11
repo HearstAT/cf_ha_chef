@@ -70,6 +70,15 @@ template '/etc/opscode/chef-server.rb' do
   mode '0644'
 end
 
+template '/etc/opscode-reporting/opscode-reporting.rb' do
+  action :create
+  source 'opscode_reporting.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  only_if { node['cf_ha_chef']['database']['ext_enable'] }
+end
+
 # Create missing keepalived cluster status files
 directory '/var/opt/opscode/keepalived' do
   action :create
@@ -135,7 +144,10 @@ end
 
 # Configure for reporting
 execute 'opscode-reporting-ctl reconfigure --accept-license'
-execute 'opscode-push-jobs-server-ctl reconfigure'
+
+unless node['cf_ha_chef']['database']['ext_enable']
+  execute 'opscode-push-jobs-server-ctl reconfigure'
+end
 
 # Start Again and Reconfigure after changes
 execute 'chef-server-ctl restart' do
@@ -166,6 +178,5 @@ end
 execute 'push-bundle' do
   command "tar -czvf #{node['cf_ha_chef']['s3']['dir']}/push_bundle.tar.gz /etc/opscode-push-jobs-server"
   action :run
+  not_if { node['cf_ha_chef']['database']['ext_enable'] }
 end
-
-include_recipe 'cf_ha_chef::certs'

@@ -26,4 +26,7 @@
 # This recipe installs the reporting UI add-on.
 
 package 'opscode-reporting'
-package 'opscode-push-jobs-server'
+
+unless node['cf_ha_chef']['database']['ext_enable']
+  package 'opscode-push-jobs-server'
+end

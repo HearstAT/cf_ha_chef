@@ -53,7 +53,8 @@ default['cf_ha_chef']['ebs_volume_id'] = ''
 default['cf_ha_chef']['ebs_device'] = ''
 
 # Domain provided via Route53 hosted zone
-default['cf_ha_chef']['domain'] = ''
+default['cf_ha_chef']['primary_domain'] = ''
+default['cf_ha_chef']['secondary_domain'] = ''
 
 # Analytic Server Config needed by all servers
 default['cf_ha_chef']['analytics']['url'] = ''
@@ -74,10 +75,10 @@ default['cf_ha_chef']['backend_vip']['ip_address'] = ''
 
 # Front End Attributes
 
-default['cf_ha_chef']['frontends']['fe1']['fqdn']          = ''
-default['cf_ha_chef']['frontends']['fe1']['ip_address']    = ''
-default['cf_ha_chef']['frontends']['fe2']['fqdn']          = ''
-default['cf_ha_chef']['frontends']['fe2']['ip_address']    = ''
+default['cf_ha_chef']['frontends']['fe01']['fqdn']          = ''
+default['cf_ha_chef']['frontends']['fe01']['ip_address']    = ''
+default['cf_ha_chef']['frontends']['fe02']['fqdn']          = ''
+default['cf_ha_chef']['frontends']['fe02']['ip_address']    = ''
 
 # New Relic configurations
 default['newrelic']['plugins'] = []
@@ -94,7 +95,7 @@ Start with the [cloudformation-chef-ha](https://github.com/HearstAT/cloudformati
 Due to limitation in chef and cloudformation both, there are some items that cannot be automated completely. Below are the steps that are needed taken post-cloudformation success.
 - The command that actually needs to be ran should be in the backend server outputs. However if it doesn't refer below.
 - Backend Primary - run the following command from an interactive terminal (e.g.; ssh into server)
-  - `chef-client -c '/root/.chef/cookbooks/client.rb' -z --chef-zero-port 8899 -j '/root/.chef/cookbooks/primary_post_restore.json'`
+  - `chef-client -c '/root/chef/client.rb' -j '/root/.chef/cookbooks/primary_post_restore.json'`
 
 
 ## Sample IAM Account Settings

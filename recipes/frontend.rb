@@ -50,3 +50,5 @@ end
 execute 'chef-manage-restart' do
   command 'chef-manage-ctl restart'
 end
+
+include_recipe 'cf_ha_chef::certs'

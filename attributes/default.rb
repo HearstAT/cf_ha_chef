@@ -80,12 +80,12 @@ default['cf_ha_chef']['backend_vip']['fqdn']       = ''
 default['cf_ha_chef']['backend_vip']['ip_address'] = ''
 
 # Frontend Attributes
-default['cf_ha_chef']['frontends']['fe1']['fqdn']          = ''
-default['cf_ha_chef']['frontends']['fe1']['ip_address']    = ''
+default['cf_ha_chef']['frontends']['fe01']['fqdn']          = ''
+default['cf_ha_chef']['frontends']['fe01']['ip_address']    = ''
 
 # Frontend Attributes
-default['cf_ha_chef']['frontends']['fe2']['fqdn']          = ''
-default['cf_ha_chef']['frontends']['fe2']['ip_address']    = ''
+default['cf_ha_chef']['frontends']['fe02']['fqdn']          = ''
+default['cf_ha_chef']['frontends']['fe02']['ip_address']    = ''
 
 # Citadel
 default['citadel']['bucket'] = ''

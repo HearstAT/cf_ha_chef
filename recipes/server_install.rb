@@ -40,14 +40,19 @@ execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" d
 end
 
 # Unpack the push files
-execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" do
+execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/push_bundle.tar.gz" do
   action :run
   cwd '/'
+  not_if { node['cf_ha_chef']['database']['ext_enable'] }
 end
 
 # Configure all the things
 execute 'chef-server-ctl reconfigure'
-execute 'opscode-push-jobs-server-ctl reconfigure'
+
+unless node['cf_ha_chef']['database']['ext_enable']
+  execute 'opscode-push-jobs-server-ctl reconfigure'
+end
+
 execute 'opscode-reporting-ctl reconfigure --accept-license'
 execute 'chef-manage-ctl reconfigure --accept-license' do
   action :run
