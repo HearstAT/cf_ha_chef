@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cf_ha_chef
-# Recipe:: secondary
+# Recipe:: bootstrap
 #
 # Copyright 2016, Hearst Automation Team
 #
@@ -24,58 +24,14 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-package 'chef-ha'
-package 'chef-server-core'
+## Only used to create the bootstrapped file in the even of utilizing existing setup
 
-template '/etc/hosts' do
+# Create bootstrapped file is using existing DB
+file '/var/opt/opscode/bootstrapped' do
   action :create
-  source 'failover_hosts.erb'
+  content 'For I am bootstrapped'
   owner 'root'
   group 'root'
   mode '0644'
-end
-
-include_recipe 'cf_ha_chef::disable_iptables'
-include_recipe 'cf_ha_chef::server_install'
-if node['cf_ha_chef']['newrelic']['enable']
-  include_recipe 'cf_ha_chef::newrelic'
-end
-if node['cf_ha_chef']['sumologic']['enable']
-  include_recipe 'cf_ha_chef::sumologic'
-end
-include_recipe 'cf_ha_chef::backup'
-include_recipe 'cf_ha_chef::bootstrap'
-
-# Make sure we have LVM installed in case of failover
-package 'lvm2' do
-  action :install
-end
-
-# Create missing keepalived cluster status files
-directory '/var/opt/opscode/keepalived' do
-  action :create
-  owner 'root'
-  group 'root'
-  mode '0755'
-end
-
-file '/var/opt/opscode/keepalived/current_cluster_status' do
-  action :create
-  content 'backup'
-  owner 'root'
-  group 'root'
-  mode '0644'
-end
-
-file '/var/opt/opscode/keepalived/requested_cluster_status' do
-  action :create
-  content 'backup'
-  owner 'root'
-  group 'root'
-  mode '0644'
-end
-
-# Since build out takes so long, server tries to failover. Rather manually restart this than fight AWS
-execute 'keepalived-halt' do
-  command 'chef-server-ctl stop keepalived'
+  only_if { node['cf_ha_chef']['install']['existing'] }
 end

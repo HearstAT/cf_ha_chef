@@ -58,6 +58,7 @@ if node['cf_ha_chef']['sumologic']['enable']
   include_recipe 'cf_ha_chef::sumologic'
 end
 include_recipe 'cf_ha_chef::backup'
+include_recipe 'cf_ha_chef::bootstrap'
 
 template '/etc/hosts' do
   action :create
