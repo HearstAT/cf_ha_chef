@@ -35,6 +35,20 @@ node.default['cf_ha_chef']['aws_secret_access_key'] = citadel['aws/secret_key']
 package 'chef-server-core'
 package 'chef-ha'
 
+# Unpack the server files
+execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/core_bundle.tar.gz" do
+  action :run
+  cwd '/'
+  only_if { File.exists?("#{node['cf_ha_chef']['s3']['dir']}/core_bundle.tar.gz") }
+end
+
+# Unpack the reporting files
+execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" do
+  action :run
+  cwd '/'
+  only_if { File.exists?("#{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz") }
+end
+
 include_recipe 'cf_ha_chef::ebs_volume'
 include_recipe 'cf_ha_chef::disable_iptables'
 if node['cf_ha_chef']['newrelic']['enable']
