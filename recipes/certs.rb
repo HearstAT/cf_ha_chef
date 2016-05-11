@@ -33,9 +33,6 @@ end
 
 include_recipe 'letsencrypt'
 
-node.default['letsencrypt']['contact'] = node['cf_ha_chef']['letsencrypt']['contact']
-node.default['letsencrypt']['endpoint'] = node['cf_ha_chef']['letsencrypt']['endpoint']
-
 execute 'restart-nginx' do
   command 'chef-server-ctl restart nginx'
   action :nothing
@@ -47,7 +44,7 @@ execute 'sleep' do
 end
 
 # Generate selfsigned certificate so nginx can start
-letsencrypt_selfsigned node['cf_ha_chef']['endpoint'] do
+letsencrypt_selfsigned "chef.#{node['cf_ha_chef']['prime_domain']}" do
   crt "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['prime_domain']}.crt"
   key "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['prime_domain']}.key"
   not_if do ::File.exists?("#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['prime_domain']}.crt") end
@@ -66,7 +63,7 @@ letsencrypt_certificate "chef.#{node['cf_ha_chef']['prime_domain']}" do
   notifies :run, 'execute[restart-nginx]', :immediately
 end
 
-letsencrypt_selfsigned node['cf_ha_chef']['endpoint'] do
+letsencrypt_selfsigned "chef.#{node['cf_ha_chef']['secondary_domain']}" do
   crt "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['secondary_domain']}.crt"
   key "#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['secondary_domain']}.key"
   not_if do ::File.exists?("#{node['cf_ha_chef']['s3']['dir']}/certs/chef.#{node['cf_ha_chef']['secondary_domain']}.crt") end

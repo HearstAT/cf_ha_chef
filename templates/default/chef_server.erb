@@ -60,8 +60,8 @@ opscode_erchef['s3_bucket'] = "<%= node['cf_ha_chef']['cookbook']['bucket'] %>"
 
 <% if node['cf_ha_chef']['database']['ext_enable'] == true %>
 postgresql['external'] = true
-postgresql['db_superuser'] = "<%= node['cf_ha_chef']['database']['user'] %>"
+postgresql['db_superuser'] = "<%= node['cf_ha_chef']['database']['username'] %>"
 postgresql['db_superuser_password'] = "<%= node['cf_ha_chef']['database']['password'] %>"
-postgresql['port'] = "<%= node['cf_ha_chef']['database']['port'] %>"
-postgresql['vip'] = "<%= node['cf_ha_chef']['database']['vip'] %>"
+postgresql['port'] = <%= node['cf_ha_chef']['database']['port'] %>
+postgresql['vip'] = "<%= node['cf_ha_chef']['database']['url'] %>"
 <% end %>
