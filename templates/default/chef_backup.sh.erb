@@ -1,15 +1,15 @@
 #!/bin/bash
 
 export BACKUP_NAME=backup_$(date +"%d_%b_%y")
-export BACKUP_HOME=<%= node['cf_ha_chef']['s3']['dir'] %>/backups
+export BACKUP_HOME="<%= node['cf_ha_chef']['s3']['dir'] %>/backups"
 export CLUSTER_STATUS=$(/var/opt/opscode/keepalived/current_cluster_status)
-export CHEF_SERVER=<%= node['cf_ha_chef']['api_fqdn'] %>
+export CHEF_SERVER="<%= node['cf_ha_chef']['api_fqdn'] %>"
 
 if [ ! -d "${BACKUP_HOME}" ]; then
     mkdir -p ${BACKUP_HOME}
 fi
 
-if [ ${CLUSTER_STATUS} == 'master' || -z ]; then
+if [ ${CLUSTER_STATUS} == 'master' ]; then
     /opt/opscode/embedded/bin/knife ec backup /tmp/backup/ -s https://${CHEF_SERVER} --with-user-sql
 
     tar -czf /${BACKUP_HOME}/${BACKUP_NAME}.tar /tmp/backup/
