@@ -39,6 +39,7 @@ package 'chef-ha'
 execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/core_bundle.tar.gz" do
   action :run
   cwd '/'
+  only_if { node['cf_ha_chef']['install']['existing'] }
   only_if { File.exists?("#{node['cf_ha_chef']['s3']['dir']}/core_bundle.tar.gz") }
 end
 
@@ -46,6 +47,7 @@ end
 execute "tar -zxvf #{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz" do
   action :run
   cwd '/'
+  only_if { node['cf_ha_chef']['install']['existing'] }
   only_if { File.exists?("#{node['cf_ha_chef']['s3']['dir']}/reporting_bundle.tar.gz") }
 end
 
