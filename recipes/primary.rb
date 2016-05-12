@@ -87,6 +87,15 @@ template '/etc/opscode/chef-server.rb' do
   mode '0644'
 end
 
+# Make sure /etc/opscode exists
+directory '/etc/opscode-reporting' do
+  action :create
+  owner 'root'
+  group 'root'
+  mode '0755'
+  only_if { node['cf_ha_chef']['database']['ext_enable'] }
+end
+
 template '/etc/opscode-reporting/opscode-reporting.rb' do
   action :create
   source 'opscode_reporting.erb'
